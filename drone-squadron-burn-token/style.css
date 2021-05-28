@@ -27,10 +27,3 @@ canvas {
   right: 0;
   bottom: 0;
 }
-
-.button-holder {
-  position: absolute;
-  z-index: 1;
-  top: 40px;
-  left: 40px;
-}

@@ -24,6 +24,7 @@ export const colours = {
 export const restartButton = document.getElementById('restart');
 export const stopButton = document.getElementById('stop');
 export const startButton = document.getElementById('start-button');
+export const loading = document.getElementById('loading');
 export const game = {state: 'stopped'};
 export const friction = 0.8;
 export const context = canvas.getContext('2d');

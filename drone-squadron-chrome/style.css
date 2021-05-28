@@ -11,6 +11,7 @@ body {
     padding: 0;
     overflow: hidden;
     background: #101010;
+    font-family: sans-serif;
 }
 
 * {
@@ -75,17 +76,28 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    color: white;
-    border: white 3px solid;
+    color: #fff;
+    border: #fff 3px solid;
     text-transform: uppercase;
     font-weight: bold;
     letter-spacing: 12px;
     font-size: 54px;
     padding: 6px 10px 5px 20px;
-    background-color: transparent;
+    background-color: #101010;
 }
 
 .start-button:hover, .start-button:focus, .start-button:active {
-    border: white 3px dashed;
+    border: #fff 3px dashed;
     cursor: pointer;
+}
+
+.loading {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }

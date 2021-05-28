@@ -6,7 +6,7 @@ var canvas = document.getElementById('canvas'),
     arrowY,
     angle,
     lines = [],
-    colours = ['#b70015', '#e2e6e7'],
+    colours = ['#FF4100', '#16130C'],
     colourIndex = 0,
     throttled = false,
     timeout = null;
@@ -35,33 +35,25 @@ function initialise() {
     angle = -42;
     lines = [];
     for(var i = 0; i < 100; i++) {
-        lines[i] = createLine((30 * i) - (width / 2) - 900, (height / 2), 40, angle,
-            0);
+        lines[i] = createLine((30 * i) - (width / 2) - 900, (height / 2), 40, angle, 0);
     }
 }
 
 function render() {
-    context.lineWidth = 10;
+    context.lineWidth = 30;
     context.lineCap = 'square';
     context.clearRect(0, 0, width, height);
     context.save();
     colourIndex = 0;
     context.translate(arrowX, arrowY);
-    context.beginPath();
     var i
-    for(i = 1; i < lines.length; i += 2) {
-        context.strokeStyle = colours[0]
+    for(i = 1; i < lines.length; i++) {
+        context.beginPath();
+        context.strokeStyle = colours[i % 2]
         lines[i] = updateLine(lines[i]);
         drawLine(context, lines[i]);
+        context.stroke();
     }
-    context.stroke();
-    context.beginPath();
-    for(i = 0; i < lines.length; i += 2) {
-        context.strokeStyle = colours[1]
-        lines[i] = updateLine(lines[i]);
-        drawLine(context, lines[i]);
-    }
-    context.stroke();
     context.restore();
     requestAnimationFrame(render);
 }

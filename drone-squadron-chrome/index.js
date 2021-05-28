@@ -5,7 +5,7 @@ import {
     debug,
     dm,
     game,
-    grid,
+    grid, loading,
     pm,
     restartButton,
     squadrons,
@@ -47,11 +47,13 @@ window.onresize = async() => {
 };
 
 window.onload = async() => {
+    loading.style.display = 'block';
     await audioHandler.setAudioFile('explosion', 'assets/audio/sound/explosion_1.wav');
     await audioHandler.setAudioFile('uzi', 'assets/audio/sound/uzi_1.wav');
     await audioHandler.setAudioFile('shotgun', 'assets/audio/sound/shotgun_1.wav');
     await audioHandler.setAudioFile('rifle', 'assets/audio/sound/rifle_1.wav');
     await audioHandler.setAudioFile('music', 'assets/audio/music/Urban-Future.mp3', 'audio/mpeg');
+    loading.style.display = 'none'
     startAnimating(60);
 };
 
