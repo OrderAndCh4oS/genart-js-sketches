@@ -80,5 +80,4 @@ vector = {
     this._x /= value
     this._y /= value
   },
-
 }
