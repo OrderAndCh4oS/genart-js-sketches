@@ -14336,13 +14336,13 @@ DataTexture3D.prototype.isDataTexture3D = true;
  * which you get by calling 'new WebGLUniforms( gl, program )'.
  *
  *
- * Properties of inner nodes including the top-level container:
+ * Properties of inner _points including the top-level container:
  *
  * .seq - array of nested uniforms
  * .map - nested uniforms by name
  *
  *
- * Methods of all nodes except the top-level container:
+ * Methods of all _points except the top-level container:
  *
  * .setValue( gl, value, [textures] )
  *
@@ -27379,7 +27379,7 @@ function filterPoints(start, end) {
 function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {
   if (!ear) return;
 
-  // interlink polygon nodes in z-order
+  // interlink polygon _points in z-order
   if (!pass && invSize) indexCurve(ear, minX, minY, invSize);
 
   let stop = ear,
@@ -27429,7 +27429,7 @@ function earcutLinked(ear, triangles, dim, minX, minY, invSize, pass) {
   }
 }
 
-// check whether a polygon node forms a valid ear with adjacent nodes
+// check whether a polygon node forms a valid ear with adjacent _points
 function isEar(ear) {
   const a = ear.prev,
     b = ear,
@@ -27520,7 +27520,7 @@ function isEarHashed(ear, minX, minY, invSize) {
   return true;
 }
 
-// go through all polygon nodes and cure small local self-intersections
+// go through all polygon _points and cure small local self-intersections
 function cureLocalIntersections(start, triangles, dim) {
   let p = start;
   do {
@@ -27537,7 +27537,7 @@ function cureLocalIntersections(start, triangles, dim) {
       triangles.push(p.i / dim);
       triangles.push(b.i / dim);
 
-      // remove two nodes involved
+      // remove two _points involved
       removeNode(p);
       removeNode(p.next);
 
@@ -27701,7 +27701,7 @@ function sectorContainsSector(m, p) {
   return area(m.prev, m, p.prev) < 0 && area(p.next, m, m.next) < 0;
 }
 
-// interlink polygon nodes in z-order
+// interlink polygon _points in z-order
 function indexCurve(start, minX, minY, invSize) {
   let p = start;
   do {
@@ -27817,7 +27817,7 @@ function pointInTriangle(ax, ay, bx, by, cx, cy, px, py) {
   );
 }
 
-// check if a diagonal between two polygon nodes is valid (lies in polygon interior)
+// check if a diagonal between two polygon _points is valid (lies in polygon interior)
 function isValidDiagonal(a, b) {
   return (
     a.next.i !== b.i &&
@@ -27974,14 +27974,14 @@ function Node(i, x, y) {
   this.x = x;
   this.y = y;
 
-  // previous and next vertex nodes in a polygon ring
+  // previous and next vertex _points in a polygon ring
   this.prev = null;
   this.next = null;
 
   // z-order curve value
   this.z = null;
 
-  // previous and next nodes in z-order
+  // previous and next _points in z-order
   this.prevZ = null;
   this.nextZ = null;
 

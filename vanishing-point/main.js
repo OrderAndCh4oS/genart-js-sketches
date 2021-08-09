@@ -132,7 +132,7 @@ function update() {
     context.clearRect(0, 0, width, height);
     drawShapes(scale, darkMode ? ['#E8E5D7', '#FF4100'] : ['#FF4100', '#16130C'],
         darkMode ? '#16130C' : '#E8E5D7');
-    // drawShapes(scale * 0.5, darkMode ? '#FF4100' : '#E8E5D7', '#16130C');
+    // drawPoints(scale * 0.5, darkMode ? '#FF4100' : '#E8E5D7', '#16130C');
 }
 
 function render() {

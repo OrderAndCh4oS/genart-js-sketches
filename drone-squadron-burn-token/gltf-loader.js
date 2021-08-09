@@ -2023,7 +2023,7 @@ class GLTFParser {
         // Clear the loader cache
         this.cache.removeAll();
 
-        // Mark the special nodes/meshes in json for efficient parse
+        // Mark the special _points/meshes in json for efficient parse
         this._invokeAll( function ( ext ) {
 
             return ext._markDefs && ext._markDefs();
@@ -2075,7 +2075,7 @@ class GLTFParser {
     }
 
     /**
-     * Marks the special nodes/meshes in json for efficient parse.
+     * Marks the special _points/meshes in json for efficient parse.
      */
     _markDefs() {
 
@@ -2097,7 +2097,7 @@ class GLTFParser {
 
         }
 
-        // Iterate over all nodes, marking references to shared resources,
+        // Iterate over all _points, marking references to shared resources,
         // as well as skeleton joints.
         for ( let nodeIndex = 0, nodeLength = nodeDefs.length; nodeIndex < nodeLength; nodeIndex ++ ) {
 
@@ -2130,7 +2130,7 @@ class GLTFParser {
 
     /**
      * Counts references to shared node / Object3D resources. These resources
-     * can be reused, or "instantiated", at multiple nodes in the scene
+     * can be reused, or "instantiated", at multiple _points in the scene
      * hierarchy. Mesh, Camera, and Light instances are instantiated and must
      * be marked. Non-scenegraph resources (like Materials, Geometries, and
      * Textures) can be reused directly and are not marked here.
