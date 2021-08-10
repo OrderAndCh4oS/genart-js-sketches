@@ -47,11 +47,16 @@ class Particle {
     gravitateTo(p2) {
         const grav = new Vector(0, 0),
             dist = this.distanceTo(p2);
-        console.log(dist);
         grav.length = p2.mass / (dist * dist);
         grav.angle = this.angleTo(p2);
-        console.log('L', grav.length);
-        console.log('A', grav.angle);
+        this.velocity.addTo(grav);
+    }
+
+    pushAway(p2) {
+        const grav = new Vector(0, 0),
+            dist = this.distanceTo(p2);
+        grav.length = p2.mass / (dist * dist);
+        grav.angle = this.angleTo(Math.PI + p2);
         this.velocity.addTo(grav);
     }
 }

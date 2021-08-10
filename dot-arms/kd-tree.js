@@ -99,7 +99,7 @@ class KdTree {
     _visited = 0;
 
     constructor(nodes = [], k = 2) {
-        this._nodes = nodes;
+        this._nodes = [...nodes];
         this._k = k;
         this._tree = this.buildTree(nodes);
     }

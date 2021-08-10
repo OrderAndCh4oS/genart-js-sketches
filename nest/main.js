@@ -9,7 +9,7 @@ let canvas = document.getElementById('canvas'),
     darkBackground = '#FF4100',
     lightBackground = '#E8E5D7',
     count = 50,
-    radius = 12,
+    radius = 3.33,
     graph,
     centre,
     circleRadius,
@@ -20,7 +20,7 @@ let canvas = document.getElementById('canvas'),
     startTime,
     fps = 12,
     play = true,
-    darkMode = true
+    darkMode = false
 ;
 
 window.onclick = function() {
@@ -63,7 +63,8 @@ function initialise() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
     centre = new Point(width / 2, height / 2);
-    circleRadius = width / 2 * 0.8;
+    const minDimension = width <= height ? width : height;
+    circleRadius = minDimension / 2 * 0.666;
     graph = new Graph();
     for(let a = 0; a <= TAU; a += TAU / 240) {
         const point = Ellipse.getCirclePoint(centre.x, centre.y, circleRadius, a);
@@ -82,7 +83,7 @@ function startAnimating() {
 function drawPoints() {
     context.fillStyle = darkMode ? '#E8E5D7' : '#FF4100';
     context.strokeStyle = '#16130C';
-    context.lineWidth = 3;
+    context.lineWidth = 2.5;
 
     context.beginPath();
     context.moveTo(graph.points[0].x, graph.points[0].y);
@@ -94,7 +95,7 @@ function drawPoints() {
 
     for(const point of graph.points) {
         context.beginPath();
-        context.arc(point.x, point.y, 3, 0, TAU, true);
+        context.arc(point.x, point.y, radius, 0, TAU, true);
         context.fill();
     }
 }

@@ -79,6 +79,8 @@ class Graph {
             }
             root = root.next.b;
         }
-        this.splitEdge(this._edges[~~(Math.random() * this._edges.length)])
+        if(this._edges.length < 1000) {
+            this.splitEdge(this._edges[~~(Math.random() * this._edges.length)])
+        }
     }
 }
