@@ -103,7 +103,7 @@ class Vector {
 
     pushFrom(b) {
         const push = new Vector(0, 0), dist = this.distanceTo(b);
-        push.length = 35 / (dist * dist);
+        push.length = 50 / (dist * dist);
         push.angle = new Vector(b.x, b.y).angleTo(this) + (Math.random() * Math.PI);
         this.addTo(push);
     }
