@@ -24,6 +24,7 @@ class Graph {
     _nodes = [];
     _edges = [];
     _vector = new Vector(0, 0);
+    _kdTree;
 
     get points() {
         return this._nodes.map(n => n.point);
@@ -31,6 +32,10 @@ class Graph {
 
     get root() {
         return this._nodes[0];
+    }
+
+    get kdTree() {
+        return this._kdTree;
     }
 
     addNode(point) {
@@ -67,16 +72,13 @@ class Graph {
     }
 
     update() {
-        const kdTree = new KdTree(this._nodes);
-        let root = this._nodes[0];
+        this._kdTree = new KdTree(this._nodes);
+        let root = this.root;
         while(root.next) {
             this._vector.point = root.point;
-            const nearest = kdTree.findNearest(root);
-            if(this._vector.distanceTo(nearest) > 25) {
-                this._vector.pullTo(nearest);
-            } else {
-                this._vector.pushFrom(nearest);
-            }
+            const nearest = this._kdTree.findNearest(root);
+            this._vector.pushFrom(nearest);
+            this._vector.pullTo(root.next.b);
             root = root.next.b;
         }
         if(this._edges.length < 1000) {

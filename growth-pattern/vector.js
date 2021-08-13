@@ -96,15 +96,17 @@ class Vector {
 
     pullTo(b) {
         const pull = new Vector(0, 0), dist = this.distanceTo(b);
-        pull.length = 300 / (dist * dist);
+        const length = 50 / (dist * dist);
+        pull.length = length < 5 ? length : 5;
         pull.angle = this.angleTo(b);
         this.addTo(pull);
     }
 
     pushFrom(b) {
         const push = new Vector(0, 0), dist = this.distanceTo(b);
-        push.length = 50 / (dist * dist);
-        push.angle = new Vector(b.x, b.y).angleTo(this) + (Math.random() * Math.PI);
+        const length = 250 / (dist * dist);
+        push.length = length < 66 ? length : 66;
+        push.angle = new Vector(b.x, b.y).angleTo(this) + (Math.random() * Math.PI / 2);
         this.addTo(push);
     }
 }

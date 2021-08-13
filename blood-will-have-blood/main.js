@@ -32,7 +32,14 @@ window.onclick = function() {
 };
 
 window.onkeyup = function(e) {
-    if(e.code === 'Space') play = !play;
+    if(e.code === 'Space') {
+        play = !play;
+    } else {
+        darkMode = !darkMode;
+        document.body.style.backgroundColor = darkMode ? darkBackground : lightBackground;
+        initialise();
+        update();
+    }
 };
 
 window.onresize = function() {

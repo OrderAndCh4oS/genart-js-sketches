@@ -8,8 +8,8 @@ let canvas = document.getElementById('canvas'),
     context = canvas.getContext('2d'),
     darkBackground = '#FF4100',
     lightBackground = '#E8E5D7',
-    count = 50,
-    radius = 3.33,
+    count = 64,
+    radius = 1,
     graph,
     centre,
     circleRadius,
@@ -18,7 +18,7 @@ let canvas = document.getElementById('canvas'),
     elapsed,
     then,
     startTime,
-    fps = 12,
+    fps = 24,
     play = true,
     darkMode = false
 ;
@@ -63,10 +63,11 @@ function initialise() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
     centre = new Point(width / 2, height / 2);
+    context.clearRect(0, 0, width, height);
     const minDimension = width <= height ? width : height;
-    circleRadius = minDimension / 2 * 0.666;
+    circleRadius = minDimension / 2 * 0.555;
     graph = new Graph();
-    for(let a = 0; a <= TAU; a += TAU / 240) {
+    for(let a = 0; a < TAU; a += TAU / count) {
         const point = Ellipse.getCirclePoint(centre.x, centre.y, circleRadius, a);
         graph.addNode(point);
     }
@@ -82,28 +83,35 @@ function startAnimating() {
 
 function drawPoints() {
     context.fillStyle = darkMode ? '#E8E5D7' : '#FF4100';
-    context.strokeStyle = '#16130C';
-    context.lineWidth = 2.5;
+    context.strokeStyle = 'rgba(22,19,12, 0.15)';
+    context.lineJoin = 'bevel';
+    context.lineWidth = 1;
 
     context.beginPath();
     context.moveTo(graph.points[0].x, graph.points[0].y);
-    for(const point of graph.points) {
+    let root = graph.root;
+    while(root.next) {
+        const point = root.point;
         context.lineTo(point.x, point.y);
+        root = root.next.b;
     }
-    context.lineTo(graph.points[0].x, graph.points[0].y)
+    context.lineTo(graph.points[0].x, graph.points[0].y);
     context.stroke();
 
-    for(const point of graph.points) {
+    root = graph.root;
+    while(root.next) {
+        const point = root.point;
         context.beginPath();
         context.arc(point.x, point.y, radius, 0, TAU, true);
         context.fill();
+        root = root.next.b;
     }
 }
 
 function update() {
-    context.clearRect(0, 0, width, height);
+    // context.clearRect(0, 0, width, height);
     drawPoints();
-    graph.update()
+    graph.update();
 }
 
 function render() {

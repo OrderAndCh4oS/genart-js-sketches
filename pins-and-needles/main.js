@@ -7,7 +7,7 @@ let canvas = document.getElementById('canvas'),
     height = canvas.height = window.innerHeight,
     context = canvas.getContext('2d'),
     darkBackground = '#FF4100',
-    lightBackground = '#E8E5D7',
+    lightBackground = '#16130C',
     count = 50,
     radius = 7,
     graph,
@@ -83,7 +83,7 @@ function startAnimating() {
 
 function drawPoints() {
     context.fillStyle = darkMode ? '#E8E5D7' : '#FF4100';
-    context.strokeStyle = '#16130C';
+    context.strokeStyle = darkMode ? '#16130C' : '#E8E5D7';
     context.lineJoin = 'bevel';
     context.lineWidth = 3;
 

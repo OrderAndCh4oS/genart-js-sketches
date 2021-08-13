@@ -75,7 +75,7 @@ class Graph {
         this._kdTree = new KdTree(this._nodes);
         let root = this.root;
         while(root.next) {
-            if(root.point.y > window.innerHeight + 250) {
+            if(root.point.y <  -300) {
                 root = root.next.b;
                 continue;
             }
