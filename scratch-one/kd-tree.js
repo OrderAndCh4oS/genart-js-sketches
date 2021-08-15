@@ -90,9 +90,13 @@ class KdTree {
     }
 
     _findInRadius(r, target) {
-        const nearest = this.findNearest(target);
-        if(target.distanceTo(nearest) > r) {return this._found}
-        this._found.push(nearest);
+        let nearest;
+        do {
+            nearest = this.findNearest(target);
+            if(target.distanceTo(nearest) > r) {return this._found}
+            this._found.push(nearest);
+        } while(target.distanceTo(nearest) < r)
+
         return this._found;
     }
 }

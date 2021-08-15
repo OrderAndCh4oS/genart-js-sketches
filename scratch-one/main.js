@@ -101,7 +101,7 @@ function drawPoints() {
     context.lineWidth = 1;
 
     kdTree = new KdTree(graph.nodes);
-    const nearest = kdTree._findKnn(12, graph.nodes[0]);
+    const nearest = kdTree._findInRadius(210, graph.nodes[0]);
 
     for(let i = 0; i < nearest.length; i++) {
         let vector = nearest[i].point;
