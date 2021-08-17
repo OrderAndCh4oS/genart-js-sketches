@@ -2,14 +2,13 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: #0c0c0c;
+  background: #16130c;
 }
 
 body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: linear-gradient(to right, #040405, #0c0c0c);
 }
 
 * {

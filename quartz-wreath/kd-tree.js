@@ -70,7 +70,6 @@ class KdTree {
             }
             this._found.push(nearest);
         }
-
         return this._found;
     }
 
@@ -78,6 +77,7 @@ class KdTree {
         let nearest;
         do {
             nearest = this.findNearest(target);
+            console.log('n', nearest)
             if(!nearest) break;
             if(target.distanceTo(nearest) > r) {return this._found;}
             this._found.push(nearest);

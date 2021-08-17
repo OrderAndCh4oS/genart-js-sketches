@@ -1,6 +1,6 @@
 class Vector extends Point {
     constructor(x, y) {
-        super(x, y);
+        super(x, y)
     }
 
     get angle() {

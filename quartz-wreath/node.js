@@ -1,7 +1,6 @@
 class Node {
     _point;
-    _leftEdge = null;
-    _rightEdge = null;
+    _edge = null;
     _left;
     _right;
 
@@ -21,12 +20,8 @@ class Node {
         return this._point.y;
     }
 
-    get leftEdge() {
-        return this._leftEdge;
-    }
-
-    get rightEdge() {
-        return this._rightEdge;
+    get next() {
+        return this._edge;
     }
 
     get left() {
@@ -42,22 +37,14 @@ class Node {
     }
 
     makeEdge(node) {
-        node.setLeftEdge(this);
-        this.setRightEdge(node);
+        const edge = new Edge(this, node);
+        this._edge = edge;
 
-        return this._rightEdge;
-    }
-
-    setRightEdge(node) {
-        this._rightEdge = new Edge(this, node);
-    }
-
-    setLeftEdge(node) {
-        this._leftEdge = new Edge(this, node);
+        return edge;
     }
 
     removeEdge() {
-        this._rightEdge = null;
+        this._edge = null;
     }
 
     distanceTo(p2) {
