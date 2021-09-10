@@ -1,40 +1,22 @@
-const TAU = Math.PI * 2;
+let z = 0, v, scale;
 
-let canvas = document.getElementById('canvas'),
-    context = canvas.getContext('2d'),
-    throttled = false,
-    timeout = null,
-    width,
-    height,
-    centre,
-    fpsInterval,
-    now,
-    elapsed,
-    then,
-    fps = 24,
-    startTime,
-    iteration = 0,
-    play = true,
-    darkMode = true,
-    darkBackground = '#FF4100',
-    lightBackground = '#E8E5D7',
-    colours = ['#16130c', '#E8E5D7'],
-    currentColour,
-    graph,
-    kdTree,
-    vectors = []
-;
-
-window.onclick = function() {
+function toggleDarkMode() {
     darkMode = !darkMode;
     document.body.style.backgroundColor = darkMode ? darkBackground : lightBackground;
-    colours = darkMode ? ['#16130c', '#E8E5D7'] : ['#FF4100', '#E8E5D7'];
     initialise();
     update();
+}
+
+window.onclick = function() {
+    toggleDarkMode();
 };
 
 window.onkeyup = function(e) {
-    if(e.code === 'Space') play = !play;
+    if(e.code === 'Space') {
+        play = !play;
+    } else {
+        // toggleDarkMode();
+    }
 };
 
 window.onresize = function() {
@@ -65,26 +47,8 @@ function resizeHandler() {
 function initialise() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    centre = new Point(width / 2, height / 2);
-    context.clearRect(0, 0, width, height);
-    graph = new Graph();
-    vectors = [];
-    vectors.push(new Vector(centre.x, centre.y));
-    vectors.push(new Vector(centre.x + 100, centre.y + 100));
-    vectors.push(new Vector(centre.x + 200, centre.y + 100));
-    vectors.push(new Vector(centre.x + 150, centre.y + 150));
-    vectors.push(new Vector(centre.x - 100, centre.y - 100));
-    vectors.push(new Vector(centre.x - 200, centre.y - 100));
-    vectors.push(new Vector(centre.x - 150, centre.y - 150));
-    vectors.push(new Vector(centre.x + 100, centre.y - 100));
-    vectors.push(new Vector(centre.x + 200, centre.y - 100));
-    vectors.push(new Vector(centre.x + 150, centre.y - 150));
-    vectors.push(new Vector(centre.x - 100, centre.y + 100));
-    vectors.push(new Vector(centre.x - 200, centre.y + 100));
-    vectors.push(new Vector(centre.x - 150, centre.y + 150));
-    for(const vector of vectors) {
-        graph.addNode(vector);
-    }
+    const diagonalLength = Math.sqrt(width * width + height * height);
+    scale = darkMode ? diagonalLength * 0.066 : diagonalLength * 0.033;
 }
 
 function startAnimating() {
@@ -94,30 +58,44 @@ function startAnimating() {
     render();
 }
 
-function drawPoints() {
-    context.fillStyle = darkMode ? '#E8E5D7' : '#FF4100';
-    context.strokeStyle = colours[iteration % colours.length];
-    context.lineJoin = 'bevel';
-    context.lineWidth = 1;
+function update() {
+    context.clearRect(0, 0, width, height);
 
-    kdTree = new KdTree(graph.nodes);
-    const nearest = kdTree._findInRadius(210, graph.nodes[0]);
+    for(let x = 0; x < width; x += scale + 1) {
+        for(let y = 0; y < height; y += scale + 1) {
+            const radius = (scale * v) / 2;
+            if(!darkMode) {
+                v = Math.abs(getValue(x, y, z)) / 2;
 
-    for(let i = 0; i < nearest.length; i++) {
-        let vector = nearest[i].point;
-        console.log(vector, graph.nodes[0].point);
-        vector.pullTo(graph.nodes[0].point, 0.01);
+                context.fillStyle = white;
+                context.fillRect(x, y, scale * v, scale * v);
+
+                v = Math.abs(getValue(x, y, z + 0.0768)) / 3;
+
+                context.fillStyle = black;
+                context.beginPath();
+                context.arc(x, y, radius, 0, TAU, true);
+                context.fill();
+            } else {
+                v = Math.abs(getValue(x, y, z)) / 3;
+                context.fillStyle = white;
+                context.fillRect(x, y, scale * v * 0.55, scale * v * 0.55);
+
+                v = Math.abs(getValue(x, y, z + 0.0768)) / 3;
+                context.fillStyle = red;
+                context.beginPath();
+                context.arc(scale / 2 + x, scale / 2 + y, radius * 0.66, 0, TAU, true);
+                context.fill();
+            }
+        }
     }
-    for(let i = 0; i < vectors.length; i++) {
-        let vector = vectors[i];
-        context.beginPath();
-        context.arc(vector.x, vector.y, 5, 0, TAU, true);
-        context.fill();
-    }
+    z += 0.048;
+    requestAnimationFrame(render);
 }
 
-function update() {
-    drawPoints();
+function getValue(x, y, z) {
+    const scale = 0.004;
+    return noise.perlin3(x * scale, y * scale, z) * Math.PI * 2;
 }
 
 function render() {
@@ -127,6 +105,10 @@ function render() {
     if(elapsed <= fpsInterval) return;
     then = now - (elapsed % fpsInterval);
     if(!play) return;
-    iteration++;
     update();
+    iteration++;
+}
+
+function isInBounds(p, w, h) {
+    return !(p.x < 20 || p.y < 20 || p.x > w || p.y > h);
 }

@@ -41,6 +41,10 @@ class Graph {
         return this._nodes;
     }
 
+    get edges() {
+        return this._edges;
+    }
+
     addNode(point) {
         const node = new Node(point);
         this._nodes.push(node);
@@ -55,12 +59,11 @@ class Graph {
         for(let i = 0; i < this._nodes.length - 1; i++) {
             this.addEdge(this._nodes[i], this._nodes[i + 1]);
         }
-        this.addEdge(this._nodes[this._nodes.length - 1], this._nodes[0]);
     }
 
     splitEdge(edge) {
         this.removeEdge(edge);
-        const node = new Node(edge.midpoint);
+        const node = new Node(new Vector(edge.midpoint.x, edge.midpoint.y));
         const edgeOne = edge.a.makeEdge(node);
         const edgeTwo = node.makeEdge(edge.b);
         this._edges.push(edgeOne);

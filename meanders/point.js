@@ -24,12 +24,12 @@ class Point {
     }
 
     get coords() {
-        return [this._x, this._y]
+        return [this._x, this._y];
     }
 
     distanceTo(p2) {
         const dx = p2.x - this._x, dy = p2.y - this._y;
-        return Math.sqrt(dx * dx + dy * dy)
+        return Math.sqrt(dx * dx + dy * dy);
     };
 
     equals(p2) {
@@ -39,5 +39,9 @@ class Point {
 
     isFinite() {
         return this._x !== Infinity && this._y !== Infinity;
+    }
+
+    clone() {
+        return new Point(this._x, this._y);
     }
 }

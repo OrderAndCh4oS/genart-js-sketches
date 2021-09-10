@@ -51,6 +51,42 @@ class KdTree {
         return this._best;
     }
 
+    findKnn(k, target) {
+        this._found = [];
+        while(this._found.length < k) {
+            const nearest = this.findNearest(target);
+            this._found.push(nearest);
+        }
+        return this._found;
+    }
+
+    findKnnInRadius(k, r, target) {
+        this._found = [];
+        while(this._found.length < k) {
+            const nearest = this.findNearest(target);
+            if(!nearest) break;
+            if(target.distanceTo(nearest) > r) {
+                return this._found;
+            }
+            this._found.push(nearest);
+        }
+
+        return this._found;
+    }
+
+    findInRadius(r, target) {
+        let nearest;
+        do {
+            nearest = this.findNearest(target);
+            if(!nearest) break;
+            console.log('t', target);
+            if(target.distanceTo(nearest) > r) {return this._found;}
+            this._found.push(nearest);
+        } while(target.distanceTo(nearest) < r);
+
+        return this._found;
+    }
+
     _nearest(root, target, depth) {
         if(root == null) return;
         const distance = root.distanceTo(target);
@@ -66,37 +102,5 @@ class KdTree {
 
         this._nearest(dx > 0 ? root.left : root.right, target, depth + 1);
         this._nearest(dx > 0 ? root.right : root.left, target, depth + 1);
-    }
-
-    _findKnn(k, target) {
-        this._found = [];
-        while(this._found.length < k) {
-            const nearest = this.findNearest(target);
-            this._found.push(nearest);
-        }
-        return this._found;
-    }
-
-    _findKnnInRadius(k, r, target) {
-        this._found = [];
-        while(this._found.length < k) {
-            const nearest = this.findNearest(target);
-            if(target.distanceTo(nearest) > r) {
-                return this._found
-            }
-            this._found.push(nearest);
-        }
-        return this._found;
-    }
-
-    _findInRadius(r, target) {
-        let nearest;
-        do {
-            nearest = this.findNearest(target);
-            if(target.distanceTo(nearest) > r) {return this._found}
-            this._found.push(nearest);
-        } while(target.distanceTo(nearest) < r)
-
-        return this._found;
     }
 }

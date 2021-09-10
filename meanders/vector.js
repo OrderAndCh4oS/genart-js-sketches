@@ -88,11 +88,4 @@ class Vector extends Point {
             this.addTo(v);
         }
     }
-
-    moveAwayFrom(b, distance) {
-        const push = new Vector(0, 0);
-        push.length = distance
-        push.angle = new Vector(b.x, b.y).angleTo(this) + (Math.random() * Math.PI / 2);
-        this.addTo(push);
-    }
 }
