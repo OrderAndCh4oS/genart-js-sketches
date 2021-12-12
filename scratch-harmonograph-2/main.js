@@ -15,15 +15,8 @@ let canvas = document.getElementById('canvas'),
     startTime,
     play = true,
     iteration = 0,
-    darkMode = true,
-    darkBackground = '#FF4100',
-    lightBackground = '#E8E5D7',
-    colours = ['#E8E5D7', '#16130c'],
-    radius = 25,
-    frequencyXABase,
-    frequencyXBBase,
-    frequencyYABase,
-    frequencyYBBase,
+    radius,
+    count,
     frequencyXA,
     phaseXA,
     amplitudeXA,
@@ -39,13 +32,18 @@ let canvas = document.getElementById('canvas'),
     frequencyYB,
     phaseYB,
     amplitudeYB,
-    dampingYB
+    dampingYB,
+    amplitudeXAStep,
+    amplitudeYAStep,
+    amplitudeXBStep,
+    amplitudeYBStep,
+    frequencyXAStep,
+    frequencyYAStep,
+    frequencyXBStep,
+    frequencyYBStep
 ;
 
 function toggleDarkMode() {
-    darkMode = !darkMode;
-    document.body.style.backgroundColor = darkMode ? darkBackground : lightBackground;
-    colours = darkMode ? ['#E8E5D7', '#16130c'] : ['#E8E5D7', '#FF4100', '#16130c'];
     initialise();
     update();
 }
@@ -78,35 +76,45 @@ window.onload = function() {
     startAnimating();
 };
 
-window.onmousemove = function(event) {
-    // do nothing
-};
-
 function resizeHandler() {
     initialise();
     update();
 }
 
 function initialise() {
+    iteration = 0;
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
     centre = new Point(width / 2, height / 2);
-    frequencyXABase = (Math.random() * 3);
-    frequencyXBBase = (Math.random() * 3);
-    frequencyYABase = (Math.random() * 3);
-    frequencyYBBase = (Math.random() * 3);
-    phaseXA = (Math.random() * 40) + width / 3;
-    amplitudeXA = (Math.random() * 40) + width / 3;
-    dampingXA = (Math.random() * 0.0995) + 0.0005;
-    phaseXB = (Math.random() * 40) + width / 3;
-    amplitudeXB = (Math.random() * 40) + width / 3;
-    dampingXB = (Math.random() * 0.0995) + 0.0005;
-    phaseYA = (Math.random() * 40) + height / 3;
-    amplitudeYA = (Math.random() * 40) + height / 3;
-    dampingYA = (Math.random() * 0.0995) + 0.0005;
-    phaseYB = (Math.random() * 40) + height / 3;
-    amplitudeYB = (Math.random() * 40) + height / 3;
-    dampingYB = (Math.random() * 0.0995) + 0.0005;
+    radius = 3;
+    count = ~~(Math.random() * 10 + 5);
+    frequencyXA = Math.random() * 0.9 + 0.05;
+    frequencyXB = Math.random() * 0.9 + 0.05;
+    frequencyYA = Math.random() * 0.9 + 0.05;
+    frequencyYB = Math.random() * 0.9 + 0.05;
+    phaseXA = (Math.random() * 175) + 25;
+    phaseXB = (Math.random() * 175) + 25;
+    phaseYA = (Math.random() * 175) + 25;
+    phaseYB = (Math.random() * 175) + 25;
+    amplitudeXA = (Math.random() * 175) + 25;
+    amplitudeXB = (Math.random() * 175) + 25;
+    amplitudeYA = (Math.random() * 175) + 25;
+    amplitudeYB = (Math.random() * 175) + 25;
+    dampingXA = (Math.random() * 0.0095) + 0.0005;
+    dampingXB = (Math.random() * 0.0095) + 0.0005;
+    dampingYA = (Math.random() * 0.0095) + 0.0005;
+    dampingYB = (Math.random() * 0.0095) + 0.0005;
+
+    while(Math.abs(frequencyXA - frequencyXB) < 0.2) {
+        frequencyXB = Math.random();
+    }
+
+    while(Math.abs(frequencyYA - frequencyYB) < 0.2) {
+        frequencyYB = Math.random();
+    }
+
+    context.translate(centre.x, centre.y);
+
 }
 
 function startAnimating() {
@@ -117,20 +125,16 @@ function startAnimating() {
 }
 
 function update() {
-    context.clearRect(0, 0, width, height);
-    context.fillStyle = darkMode ? darkBackground : lightBackground;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    squiggle(
-        frequencyXA, phaseXA, amplitudeXA, dampingXA,
-        frequencyXB, phaseXB, amplitudeXB, dampingXB,
-        frequencyYA, phaseYA, amplitudeYA, dampingYA,
-        frequencyYB, phaseYB, amplitudeYB, dampingYB,
-    );
-    iteration++;
-    frequencyXA = sinWave(frequencyXABase + iteration * 0.01, 3);
-    frequencyXB = sinWave(frequencyXBBase + iteration * 0.015, 3);
-    frequencyYA = sinWave(frequencyYABase + iteration * 0.0125, 3);
-    frequencyYB = sinWave(frequencyYBBase + iteration * 0.0175, 3);
+    context.clearRect(-width / 2, -height / 2, width, height);
+    for(let i = 0; i < 1; i++) {
+        context.fillStyle = colours[i % colours.length];
+        squiggle(
+            frequencyXA, phaseXA, amplitudeXA, dampingXA,
+            frequencyXB, phaseXB, amplitudeXB, dampingXB,
+            frequencyYA, phaseYA, amplitudeYA, dampingYA,
+            frequencyYB, phaseYB, amplitudeYB, dampingYB
+        );
+    }
 }
 
 function render() {
@@ -141,61 +145,43 @@ function render() {
     then = now - (elapsed % fpsInterval);
     if(!play) return;
     update();
+    iteration++;
 }
 
 function squiggle(
     frequencyXA, phaseXA, amplitudeXA, dampingXA,
     frequencyXB, phaseXB, amplitudeXB, dampingXB,
     frequencyYA, phaseYA, amplitudeYA, dampingYA,
-    frequencyYB, phaseYB, amplitudeYB, dampingYB,
+    frequencyYB, phaseYB, amplitudeYB, dampingYB
 ) {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
     const xA = new Harmonograph(frequencyXA, phaseXA, amplitudeXA, dampingXA);
     const xB = new Harmonograph(frequencyXB, phaseXB, amplitudeXB, dampingXB);
     const yA = new Harmonograph(frequencyYA, phaseYA, amplitudeYA, dampingYA);
     const yB = new Harmonograph(frequencyYB, phaseYB, amplitudeYB, dampingYB);
     let scale = 1;
     const points = [];
-    let lastPoint = null;
-    let i = 0;
-
-    for(; i < 50; i++) {
-        const x = xA.getValue(i) + xB.getValue(i);
-        const y = yA.getValue(i) + yB.getValue(i);
-        if(lastPoint === null) {
-            lastPoint = new Point(x, y);
-            continue;
-        }
-        let t = 1;
-        for(; t >= 0; t -= 1 / 45) {
-            points.push(Bezier.cubicBezier(
-                new Point(x, y),
-                new Point(x, lastPoint.y),
-                new Point(lastPoint.x, y),
-                new Point(lastPoint.x, lastPoint.y),
-                t,
-            ));
-        }
-        lastPoint = new Point(x, y);
+    let i = iteration * 3;
+    const steps = i + 350;
+    for(; i < steps; i++) {
+        const x = xA.getValue(i / 25) + xB.getValue(i / 25);
+        const y = yA.getValue(i / 25) + yB.getValue(i / 25);
+        points.push(new Point(x, y));
     }
 
-    let colourStep = 0;
-    let colour = colours[0];
-    for(let j = 0; j < points.length; j++) {
+    for(let j = 1; j < points.length; j++) {
         let p = points[j];
-        if(j % 25 === 0) {
-            colourStep = (colourStep + 1) % colours.length;
-            colour = colours[colourStep];
+        for(let r = 0; r < count; r++) {
+
+            context.beginPath();
+            context.arc(p.x, p.y, radius, 0, TAU, true);
+            context.fill();
+            // context.stroke();
+            scale *= 0.9999;
+            context.rotate(TAU / count);
         }
-        context.fillStyle = colour;
-        context.beginPath();
-        context.arc((width / 2) + p.x, (height / 2) + p.y, 100 * scale + 1, 0, TAU, true);
-        context.fill();
-        scale *= 0.9991;
     }
 }
 
-function sinWave(t, scale) {
-    return (Math.abs(Math.sin(t)) / TAU) * scale;
+function sinWave(t, speed, scale = 1) {
+    return Math.abs(Math.sin(t * speed)) * scale;
 }
