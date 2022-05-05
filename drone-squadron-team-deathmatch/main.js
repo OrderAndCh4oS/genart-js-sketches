@@ -50,7 +50,7 @@ function initialise() {
     ships = [];
     deadShips = [];
     for(let i = 0; i < 6 * 10; i++) {
-        const ship = shipClass.create(Math.random() * (width), Math.random() *
+        const ship = player.create(Math.random() * (width), Math.random() *
             (height), (Math.random() * 0.2) + 0.1, (Math.random() * 0.5) + 0.5);
         ship.friction = 0.99;
         switch(i % 6) {

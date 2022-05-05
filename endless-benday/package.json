@@ -1,0 +1,14 @@
+{
+  "name": "endless-grav",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/main.js --bundle --minify --target=chrome58,firefox57 --outfile=dist/out.js",
+    "dev": "esbuild src/main.js --bundle --minify --sourcemap --target=chrome58,firefox57 --outfile=temp/out.js",
+    "watch": "npm run dev -- --watch"
+  },
+  "author": "",
+  "license": "NONE"
+}
