@@ -22,44 +22,37 @@
     height = canvas.height = window.innerHeight;
     const colourIndex = ~~map(fxrand(), 0, 1, 0, colours.length, 1, Ease.EASE_OUT);
     const mode = fxrand();
-    const darkMode = mode > 0.5;
-    const blackAndWhite = mode > 0.96;
-    const blendMode = fxrand() < 0.5 || blackAndWhite
-        ? 'source-over'
-        : darkMode
-            ? 'screen'
-            : 'multiply';
+    const darkMode = mode > 0.45;
+    const blackAndWhite = mode > 0.8;
     const colourSet = colours[colourIndex];
     const selectedColours = shuffle(
         blackAndWhite
             ? [colourSet.black, colourSet.white]
             : colourSet.colours
     );
-    modeIndex = ~~(fxrand() * 5);
+    modeIndex = ~~(fxrand() * 4);
 
     const background = blackAndWhite
         ? colourSet.colours[~~(fxrand() * colourSet.colours.length)]
         : darkMode ? colourSet.black : colourSet.white;
 
-    if(colourSet.name === 'Constructivist' && darkMode) {
+    if(colourSet.name === 'Constructivist') {
         selectedColours.push(colourSet.white);
-    }
-
-    if(colourSet.name === 'Constructivist' && !darkMode) {
-        selectedColours.push(colourSet.black);
     }
 
     const altColour = blackAndWhite ? background : colourSet.black
 
-    const flockData = new FlockData(context, width, height, selectedColours, blendMode, altColour);
+    const flockData = new FlockData(context, width, height, selectedColours, altColour);
 
     window.$fxhashFeatures = {
         'Colour': colourSet.name,
         'Mode': blackAndWhite ? 'Black & White' : darkMode ? 'Dark' : 'Light',
-        'Blend Mode': blendMode === 'source-over'
-            ? 'Normal'
-            : blendMode[0].toUpperCase() + blendMode.slice(1),
-        ...flockData.fxFeatures
+        'Draw Mode': ['Lines', 'Dots', 'Tubes', 'Crosses'][modeIndex],
+        'Tail': [0, 2].includes(modeIndex) ? 'None' : flockData.fxFeatures.Tail,
+        'Scale Type': flockData.fxFeatures['Scale Type'],
+        'Scale Modifier': flockData.fxFeatures['Scale Modifier'],
+        'Boid Starting Position': flockData.fxFeatures['Boid Positions'],
+        'Parameter Set': flockData.fxFeatures['Unit Set']
     };
 
     window.onclick = function() {
@@ -72,7 +65,7 @@
             play = !play;
         }
         if(e.code === 'KeyM') {
-            modeIndex = (modeIndex + 1) % 5;
+            modeIndex = (modeIndex + 1) % 4;
             initialise();
         }
     };
@@ -121,7 +114,6 @@
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
         centre = new Point(width / 2, height / 2);
-        context.globalCompositeOperation = 'source-over';
         context.fillStyle = background;
         context.fillRect(0, 0, width, height);
         flockData.setupBoids();
@@ -130,7 +122,6 @@
     }
 
     function update() {
-        context.globalCompositeOperation = blendMode;
         flock.draw(modeIndex);
     }
 

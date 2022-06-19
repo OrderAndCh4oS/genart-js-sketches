@@ -92,11 +92,11 @@ function initialise() {
     context.clearRect(0, 0, width, height);
     const size = width * 0.05;
     const params = [0.012, 0.07, 0.07, 15, 250, 45, 500, 0.33];
-    const growthPatternOne = new LineGrowthPattern(...params);
+    const growthPatternOne = new BezierLineGrowthPattern(...params);
     growthPatternOne.init(width + 50, height / 5, -50, height / 5, size);
-    const growthPatternTwo = new LineGrowthPattern(...params);
+    const growthPatternTwo = new BezierLineGrowthPattern(...params);
     growthPatternTwo.init(-50, centre.y, width + 50, centre.y, size);
-    const growthPatternThree = new LineGrowthPattern(...params);
+    const growthPatternThree = new BezierLineGrowthPattern(...params);
     growthPatternThree.init(-50, height / 5 * 4, width + 50, height / 5 * 4, size);
     growthPatterns = [
         growthPatternOne,
