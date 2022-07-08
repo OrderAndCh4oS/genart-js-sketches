@@ -110,7 +110,7 @@ function initialise() {
     height = canvas.height = window.innerHeight;
     centre = new Point(width / 2, height / 2);
     context.clearRect(0, 0, width, height);
-    const params = [0.375, 0.425, 0.425, 4, 45, 200, 0.33];
+    const params = [0.375, 0.425, 0.425, 4, 45, 175, 0.33];
     growthPatterns = [];
     for(let i = 0; i < 4; i++) {
         const growthPattern = new BezierLineGrowthPattern(...params);
@@ -125,7 +125,7 @@ function initialise() {
 }
 
 function update() {
-    context.globalAlpha = 0.2;
+    context.globalAlpha = 0.33;
     context.fillStyle = background;
     context.rect(0, 0, width, height);
     context.fill();

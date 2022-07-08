@@ -79,7 +79,7 @@ class GrowthPatternAbstract {
 
         while(root) {
             const point = root.point;
-            const nearest = kdTree.findKnn(4, point);
+            const nearest = kdTree.findKnnInRadius(4, point);
             context.beginPath();
             context.moveTo(point.x, point.y);
             for(const n of nearest) {
