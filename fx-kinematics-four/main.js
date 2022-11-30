@@ -88,7 +88,7 @@ function initialise() {
     context.fillRect(0, 0, width, height);
     currentColourIndex = 0;
     radius = 0.005 * diagonalLength;
-    strokeWidth = 0.0003 * diagonalLength;
+    strokeWidth = 0.0001 * diagonalLength;
     context.translate(width / 2, height / 2);
     iteration = 0;
 }
@@ -103,8 +103,8 @@ function startAnimating() {
 function update() {
     // context.globalCompositeOperation = 'multiply';
 
-    // context.fillStyle = colourSet.black;
-    // context.fillRect(-(width / 2), -(height / 2), width, height);
+    context.fillStyle = colourSet.white;
+    context.fillRect(-(width / 2), -(height / 2), width, height);
 
     if(iteration % 50 === 0) {
         currentColourIndex++;
@@ -112,14 +112,13 @@ function update() {
     // context.fillStyle = allColours[currentColourIndex % allColours.length];
     // context.strokeStyle = colourSet.black;
     // context.lineWidth = strokeWidth;
-    context.fillStyle = colourSet.white;
+    context.fillStyle = colourSet.black;
 
     for(let i = 0; i < arms.length; i++) {
         const arm = arms[i];
         context.beginPath();
         context.arc(arm.x, arm.y, radius, 0, TAU, true);
         context.fill();
-        context.stroke();
     }
     const lastArm = arms.at(-1);
     const {
@@ -173,10 +172,10 @@ function getValues() {
     const amplitudeXB = (((fxrand() * 125) + 100) * diagonalLength) / 600;
     const amplitudeYA = (((fxrand() * 125) + 100) * diagonalLength) / 900;
     const amplitudeYB = (((fxrand() * 125) + 100) * diagonalLength) / 900;
-    const dampingXA = (fxrand() * 0.0095) + 0.0005;
-    const dampingXB = (fxrand() * 0.0095) + 0.0005;
-    const dampingYA = (fxrand() * 0.0095) + 0.0005;
-    const dampingYB = (fxrand() * 0.0095) + 0.0005;
+    const dampingXA = (fxrand() * 0.00095) + 0.00005;
+    const dampingXB = (fxrand() * 0.00095) + 0.00005;
+    const dampingYA = (fxrand() * 0.00095) + 0.00005;
+    const dampingYB = (fxrand() * 0.00095) + 0.00005;
     return {
         frequencyXA,
         frequencyXB,
