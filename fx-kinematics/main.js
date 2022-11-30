@@ -15,14 +15,19 @@ let canvas = document.getElementById('canvas'),
     width,
     height,
     diagonalLength,
-    margin
+    arms,
+    x,
+    y,
+    currentColourIndex,
+    radius
 ;
 
 const colourSet = colours[~~(fxrand() * colours.length)];
-const allColours = shuffle([...colourSet.colours, colourSet.white, colourSet.black]);
+const allColours = shuffle(
+    [...colourSet.colours, colourSet.white, colourSet.black]);
 
 window.$fxhashFeatures = {
-    'Colour': colourSet.name,
+    'Colour': colourSet.name
 };
 
 window.onclick = function(event) {
@@ -61,7 +66,23 @@ function initialise() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
     diagonalLength = Math.sqrt(width * width + height * height);
-    margin = diagonalLength * 0.25;
+    arms = [];
+    arms.push(new KinematicArm(width * 0.66, height * 0.33, 32, 0));
+    for(let i = 1; i < 1024; i++) {
+        arms.push(new KinematicArm(
+            arms[i - 1].getEndX(),
+            arms[i - 1].getEndY(),
+            32,
+            arms[i - 1].angle + 0.15
+        ));
+        arms[i].parent = arms[i - 1];
+    }
+    x = arms.at(-1).getEndX();
+    y = arms.at(-1).getEndY();
+    context.fillStyle = colourSet.black;
+    context.fillRect(0, 0, width, height);
+    currentColourIndex = 0;
+    radius = 1;
 }
 
 function startAnimating() {
@@ -72,8 +93,25 @@ function startAnimating() {
 }
 
 function update() {
+    // context.fillStyle = colourSet.black;
+    // context.fillRect(0, 0, width, height);
 
-    // if(iteration === 111 && isFxpreview) fxpreview();
+    if(iteration % 50 === 0) {
+        currentColourIndex++;
+    }
+    // context.fillStyle = allColours[currentColourIndex % allColours.length];
+    context.fillStyle = colourSet.white;
+
+    for(let i = 0; i < arms.length; i++) {
+        const arm = arms[i];
+        context.beginPath();
+        context.arc(arm.x, arm.y, radius, 0, TAU, true);
+        context.fill();
+    }
+    const lastArm = arms.at(-1);
+    x -= 10;
+    y -= 0.1;
+    lastArm.drag(x, y);
 }
 
 function render() {

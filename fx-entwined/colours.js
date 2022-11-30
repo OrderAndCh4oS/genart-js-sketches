@@ -85,21 +85,18 @@ const colours = [
         name: 'Retro Grey',
         black: '#18181a',
         white: '#f6f5f0',
-        greys: ['#BDBDBF', '#8B8B8C'],
         colours: ['#A4B6A0', '#DA4522', '#313134', '#575758']
     },
     {
         name: 'Pastel',
         black: '#222226',
         white: '#f5f2ec',
-        greys: ['#D6D3CB', '#C9C6BF'],
         colours: ['#A4E5E6', '#f3d593', '#6D7099', '#FF8B94']
     },
     {
         name: 'Peach',
         black: '#13161A',
         white: '#f8f0e8',
-        greys: ['#E8D5DC', '#AAA3B5'],
         colours: ['#FFAA5C', '#DA727E', '#AC6C82', '#685C79', '#455C7B']
     },
     {

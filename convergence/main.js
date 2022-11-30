@@ -375,8 +375,7 @@
                 params.reach, node);
             for(const n of nearest) {
                 const d = node.distanceTo(n);
-                const index = ~~map(d, 0, params.reach, 0,
-                    selectedColours.length, 1, Ease.EASE_IN);
+                const index = ~~map(d, 0, params.reach, 0, selectedColours.length, 1, Ease.EASE_IN);
                 context.strokeStyle = selectedColours[index];
                 context.beginPath();
                 context.moveTo(node.x, node.y);

@@ -1,15 +1,15 @@
-var canvas = document.getElementById('canvas'),
-    width = canvas.width = window.innerWidth,
-    height = canvas.height = window.innerHeight,
-    context = canvas.getContext('2d'),
-    mesh = [],
-    colours = ['#e2e6e7', '#b70015'],
-    colourIndex = 0,
-    angle = 0.75,
-    length = 30,
+const canvas = document.getElementById('canvas');
+let width = canvas.width = window.innerWidth,
+    height = canvas.height = window.innerHeight;
+const context = canvas.getContext('2d');
+let mesh = [];
+const colours = ['#e2e6e7', '#b70015'];
+let colourIndex = 0,
+    angle = 0.75;
+const length = 30,
     spacer = 10,
-    modifier = -0.2,
-    pointCount = width / length,
+    modifier = -0.2;
+let pointCount = width / length,
     lineCount = height / spacer,
     throttled = false,
     timeout = null;
@@ -38,7 +38,7 @@ var Arm = {
     parent: null,
 
     create: function(x, y, length, angle) {
-        var obj = Object.create(this);
+        const obj = Object.create(this);
         obj.init(x, y, length, angle);
         return obj;
     },
@@ -51,7 +51,7 @@ var Arm = {
     },
 
     parentAngles: function() {
-        var angle = this.angle,
+        let angle = this.angle,
             parent = this.parent;
         while(parent) {
             angle += parent.angle;
@@ -74,10 +74,10 @@ var Arm = {
 };
 
 function initialise(Arm) {
-    for(var i = 0; i < lineCount; i++) {
-        var arms = [];
+    for(let i = 0; i < lineCount; i++) {
+        const arms = [];
         arms.push(Arm.create(0, i * spacer, length, angle));
-        for(var j = 1; j < pointCount; j++) {
+        for(let j = 1; j < pointCount; j++) {
             arms.push(
                 Arm.create(arms[j - 1].getEndX(), arms[j - 1].getEndY(), length, 3));
             arms[j].parent = arms[j - 1];
@@ -89,14 +89,14 @@ function initialise(Arm) {
 function render() {
     colourIndex = 0;
     context.clearRect(0, 0, width, height);
-    for(var i = 0; i < lineCount; i++) {
+    for(let i = 0; i < lineCount; i++) {
         colourIndex = (colourIndex + 1) % colours.length;
         context.strokeStyle = colours[colourIndex];
         context.lineCap = "round";
         context.lineWidth = 4;
         context.beginPath();
         context.moveTo(this.x, this.y);
-        for(var j = 0; j < pointCount; j++) {
+        for(let j = 0; j < pointCount; j++) {
             mesh[i][j].angle = Math.cos(angle) * modifier;
             if(j > 0) {
                 mesh[i][j].x = mesh[i][j - 1].getEndX();
