@@ -1,6 +1,6 @@
 const TAU = Math.PI * 2;
 const rand = Math.random;
-const colours = ['#E8E5D7', '#FF4100', '#16130c']
+const colours = ['#FF4100', '#16130c']
 let canvas = document.getElementById('canvas'),
     context = canvas.getContext('2d'),
     fpsInterval,
@@ -63,7 +63,7 @@ function initialise() {
     diagonalLength = Math.sqrt(width * width + height * height);
     values = getValues();
     arms = [];
-    const r = 0.006 * diagonalLength;
+    const r = 0.012 * diagonalLength;
     const offset = 0.06 * diagonalLength;
     arms.push(new KinematicArm(0, -offset, r, 0));
     for(let i = 1; i < 1024; i++) {
@@ -77,11 +77,11 @@ function initialise() {
     }
     x = arms.at(-1).getEndX();
     y = arms.at(-1).getEndY();
-    context.fillStyle = '#16130c';
+    context.fillStyle = '#E8E5D7';
     context.fillRect(0, 0, width, height);
     currentColourIndex = 0;
-    radius = 0.0025 * diagonalLength;
-    strokeWidth = 0.00015 * diagonalLength;
+    radius = 0.004 * diagonalLength;
+    strokeWidth = 0.003   * diagonalLength;
     context.translate(width / 2, height / 2);
     iteration = 0;
 }
@@ -93,20 +93,47 @@ function startAnimating() {
     render();
 }
 
+function drawDot(x, y) {
+    context.beginPath();
+    context.arc(x, y, radius, 0, TAU, true);
+    context.fill();
+}
+
+function drawLine(xA, yA, xB, yB) {
+    context.beginPath();
+    context.moveTo(xA, yA);
+    context.lineTo(xB, yB);
+    context.stroke();
+}
+
 function update() {
-    if(iteration % 25 === 0) {
-        currentColourIndex++;
-    }
+    context.fillStyle = '#E8E5D7';
+    context.fillRect(-(width / 2), -(height / 2), width, height);
+
+    // if(iteration % 25 === 0) {
+    //     currentColourIndex++;
+    // }
     context.fillStyle = colours[currentColourIndex % colours.length];
     context.strokeStyle = colours[(currentColourIndex + 1) % colours.length];
     context.lineWidth = strokeWidth;
+    context.lineCap = 'round';
 
-    for(let i = 0; i < arms.length; i++) {
-        const arm = arms[i];
-        context.beginPath();
-        context.arc(arm.x, arm.y, radius, 0, TAU, true);
-        context.fill();
+    for(let i = 0; i < arms.length - 2; i += 2) {
+        const armOne = arms[i];
+        const armTwo = arms[i + 1];
+        const armThree = arms[i + 2];
+        drawLine(armTwo.x, armTwo.y, armThree.x, armThree.y);
+        drawDot(armOne.x, armOne.y);
+        drawDot(armTwo.x, armTwo.y);
+        drawLine(armOne.x, armOne.y, armTwo.x, armTwo.y);
     }
+
+    const lastOne = arms.at(-2);
+    const lastTwo = arms.at(-1);
+    drawDot(lastOne.x, lastOne.y);
+    drawDot(lastTwo.x, lastTwo.y);
+    drawLine(lastOne.x, lastOne.y, lastTwo.x, lastTwo.y);
+
     const lastArm = arms.at(-1);
     const {
         frequencyXA, phaseXA, amplitudeXA, dampingXA,
@@ -151,14 +178,14 @@ function getValues() {
     const frequencyXB = rand() * 0.9 + 0.05;
     const frequencyYA = rand() * 0.9 + 0.05;
     const frequencyYB = rand() * 0.9 + 0.05;
-    const phaseXA = (((rand() * 125) + 100) * diagonalLength) / 666;
-    const phaseXB = (((rand() * 125) + 100) * diagonalLength) / 666;
-    const phaseYA = (((rand() * 125) + 100) * diagonalLength) / 888;
-    const phaseYB = (((rand() * 125) + 100) * diagonalLength) / 888;
-    const amplitudeXA = (((rand() * 125) + 100) * diagonalLength) / 666;
-    const amplitudeXB = (((rand() * 125) + 100) * diagonalLength) / 666;
-    const amplitudeYA = (((rand() * 125) + 100) * diagonalLength) / 888;
-    const amplitudeYB = (((rand() * 125) + 100) * diagonalLength) / 888;
+    const phaseXA = (((rand() * 125) + 100) * diagonalLength) / 555;
+    const phaseXB = (((rand() * 125) + 100) * diagonalLength) / 555;
+    const phaseYA = (((rand() * 125) + 100) * diagonalLength) / 666;
+    const phaseYB = (((rand() * 125) + 100) * diagonalLength) / 666;
+    const amplitudeXA = (((rand() * 125) + 100) * diagonalLength) / 555;
+    const amplitudeXB = (((rand() * 125) + 100) * diagonalLength) / 555;
+    const amplitudeYA = (((rand() * 125) + 100) * diagonalLength) / 666;
+    const amplitudeYB = (((rand() * 125) + 100) * diagonalLength) / 666;
     const dampingXA = (rand() * 0.00095) + 0.00005;
     const dampingXB = (rand() * 0.00095) + 0.00005;
     const dampingYA = (rand() * 0.00095) + 0.00005;
