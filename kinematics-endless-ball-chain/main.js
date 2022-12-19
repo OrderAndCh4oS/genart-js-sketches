@@ -1,6 +1,7 @@
 const TAU = Math.PI * 2;
 const rand = Math.random;
 const colours = ['#FF4100', '#16130c']
+const darkColours = ['#16130c', '#E8E5D7']
 let canvas = document.getElementById('canvas'),
     context = canvas.getContext('2d'),
     fpsInterval,
@@ -22,10 +23,14 @@ let canvas = document.getElementById('canvas'),
     currentColourIndex,
     radius,
     values,
-    strokeWidth
+    strokeWidth,
+    currentColours,
+    mode = 0,
+    darkMode = false
 ;
 
 window.onclick = function(event) {
+    darkMode = !darkMode;
     initialise();
     update();
 };
@@ -33,6 +38,11 @@ window.onclick = function(event) {
 window.onkeyup = function(e) {
     if(e.code === 'Space') {
         play = !play;
+    }
+    if(e.code === 'KeyM') {
+        mode = (mode + 1) % 3
+        initialise();
+        update();
     }
 };
 
@@ -77,7 +87,13 @@ function initialise() {
     }
     x = arms.at(-1).getEndX();
     y = arms.at(-1).getEndY();
-    context.fillStyle = '#E8E5D7';
+    if(darkMode) {
+        currentColours = darkColours
+        context.fillStyle = mode === 0 ? '#FF4100' : mode === 1 ? '#16130c' : '#E8E5D7';
+    } else {
+        currentColours = colours
+        context.fillStyle = mode === 0 ? '#E8E5D7' : '#FF4100';
+    }
     context.fillRect(0, 0, width, height);
     currentColourIndex = 0;
     radius = 0.004 * diagonalLength;
@@ -106,19 +122,15 @@ function drawLine(xA, yA, xB, yB) {
     context.stroke();
 }
 
-function update() {
-    context.fillStyle = '#E8E5D7';
+function drawModeOne() {
+    context.fillStyle = darkMode ? '#FF4100' : '#E8E5D7';
     context.fillRect(-(width / 2), -(height / 2), width, height);
-
-    // if(iteration % 25 === 0) {
-    //     currentColourIndex++;
-    // }
-    context.fillStyle = colours[currentColourIndex % colours.length];
-    context.strokeStyle = colours[(currentColourIndex + 1) % colours.length];
+    context.fillStyle = currentColours[currentColourIndex % colours.length];
+    context.strokeStyle = currentColours[(currentColourIndex + 1) % colours.length];
     context.lineWidth = strokeWidth;
     context.lineCap = 'round';
 
-    for(let i = 0; i < arms.length - 2; i += 2) {
+    for (let i = 0; i < arms.length - 2; i += 2) {
         const armOne = arms[i];
         const armTwo = arms[i + 1];
         const armThree = arms[i + 2];
@@ -133,7 +145,43 @@ function update() {
     drawDot(lastOne.x, lastOne.y);
     drawDot(lastTwo.x, lastTwo.y);
     drawLine(lastOne.x, lastOne.y, lastTwo.x, lastTwo.y);
+}
 
+function drawModeTwo() {
+    context.strokeStyle = darkMode ? '#E8E5D7' : '#16130c';
+    context.fillStyle = darkMode ? '#16130c' : '#E8E5D7';
+    context.lineWidth = strokeWidth;
+
+    for (let i = 0; i < arms.length; i++) {
+        const arm = arms[i];
+        context.beginPath();
+        context.arc(arm.x, arm.y, radius, 0, TAU, true);
+        context.fill();
+        context.stroke();
+    }
+}
+
+function drawModeThree() {
+    context.fillStyle = darkMode ? '#FF4100' : '#E8E5D7';
+    context.fillRect(-(width / 2), -(height / 2), width, height);
+
+    context.fillStyle = '#16130c';
+
+    for (let i = 0; i < arms.length; i++) {
+        if(darkMode)
+            context.fillStyle = i % 2 === 0 ? '#16130c' : '#E8E5D7';
+
+        const arm = arms[i];
+        context.beginPath();
+        context.arc(arm.x, arm.y, radius, 0, TAU, true);
+        context.fill();
+    }
+}
+
+function update() {
+    if(mode === 0) drawModeOne();
+    if(mode === 1) drawModeTwo();
+    if(mode === 2) drawModeThree();
     const lastArm = arms.at(-1);
     const {
         frequencyXA, phaseXA, amplitudeXA, dampingXA,

@@ -110,8 +110,8 @@ function update() {
         currentColourIndex++;
     }
     // context.fillStyle = allColours[currentColourIndex % allColours.length];
-    // context.strokeStyle = colourSet.black;
-    // context.lineWidth = strokeWidth;
+    context.strokeStyle = colourSet.black;
+    context.lineWidth = strokeWidth;
     context.fillStyle = colourSet.white;
 
     for(let i = 0; i < arms.length; i++) {
