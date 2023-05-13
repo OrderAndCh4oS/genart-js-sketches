@@ -22,10 +22,12 @@ let canvas = document.getElementById('canvas'),
     currentColourIndex,
     radius,
     values,
-    strokeWidth
+    strokeWidth,
+    darkMode = true
 ;
 
 window.onclick = function(event) {
+    darkMode = !darkMode;
     initialise();
     update();
 };
@@ -80,7 +82,7 @@ function initialise() {
     context.fillStyle = '#16130c';
     context.fillRect(0, 0, width, height);
     currentColourIndex = 0;
-    radius = 0.0025 * diagonalLength;
+    radius = 0.0066 * diagonalLength;
     strokeWidth = 0.00015 * diagonalLength;
     context.translate(width / 2, height / 2);
     iteration = 0;
@@ -106,6 +108,7 @@ function update() {
         context.beginPath();
         context.arc(arm.x, arm.y, radius, 0, TAU, true);
         context.fill();
+        context.stroke()
     }
     const lastArm = arms.at(-1);
     const {

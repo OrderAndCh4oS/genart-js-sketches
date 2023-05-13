@@ -11,6 +11,7 @@ let canvas = document.getElementById('canvas'),
     play = true,
     black = '#16130c',
     white = '#E8E5D7',
+    red = '#FF4100',
     lightBackground = white,
     lines = [],
     endLines = [],
@@ -60,24 +61,7 @@ function initialise() {
     centre = new Point(width / 2, height / 2);
     iteration = 0;
     currentColour = 0;
-    const diagonal = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height);
-    const length = diagonal * 0.032;
-    const startLineWidth = diagonal * 0.0075;
     context.clearRect(0, 0, width, height);
-    const x = Math.random() * (width - 100) + 50;
-    const y = Math.random() * (height - 100) + 50;
-    const v = new Vector(x, y);
-    const v1 = new Vector(0, 0);
-    v1.length = length;
-    v1.angle = Math.random() * TAU;
-    v.addTo(v1);
-    const startLine = new Line(
-        new Point(x, y),
-        new Point(v.x, v.y)
-    );
-    startLine.width = startLineWidth;
-    lines = [startLine];
-    endLines = [startLine];
 }
 
 function startAnimating() {
@@ -87,13 +71,12 @@ function startAnimating() {
     render();
 }
 
-function drawShape(line) {
-    context.fillStyle = white;
+function drawShape(line, width = 2) {
     const angle = line.getAngle();
-    const aX = line.b.x + Math.cos(angle + Math.PI * 0.5) * 10;
-    const aY = line.b.y + Math.sin(angle + Math.PI * 0.5) * 10;
-    const bX = line.b.x + Math.cos(angle + Math.PI * 1.5) * 10;
-    const bY = line.b.y + Math.sin(angle + Math.PI * 1.5) * 10;
+    const aX = line.b.x + Math.cos(angle + Math.PI * 0.5) * width;
+    const aY = line.b.y + Math.sin(angle + Math.PI * 0.5) * width;
+    const bX = line.b.x + Math.cos(angle + Math.PI * 1.5) * width;
+    const bY = line.b.y + Math.sin(angle + Math.PI * 1.5) * width;
     context.beginPath();
     context.moveTo(line.a.x, line.a.y);
     context.lineTo(aX, aY);
@@ -103,79 +86,109 @@ function drawShape(line) {
 }
 
 function drawCircle(point, radius) {
-    context.fillStyle = '#ff0000';
     context.beginPath();
     context.arc(point.x, point.y, radius, 0, TAU, true);
     context.fill();
 }
 
 function draw() {
-    let branchLength = Infinity;
-    while(branchLength > 14 && endLines.length) {
-        const branchFrom = [...endLines];
-        const newLines = [];
+    context.clearRect(0, 0, width, height);
+    for(let i = 0; i < 10; i++) {
+        const diagonal = Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height);
+        const length = diagonal * 0.032;
+        const startLineWidth = diagonal * 0.0075;
+        const x = Math.random() * (width - 100) + 50;
+        const y = Math.random() * (height - 100) + 50;
+        const v = new Vector(x, y);
+        const v1 = new Vector(0, 0);
+        v1.length = length;
+        v1.angle = Math.random() * TAU;
+        v.addTo(v1);
+        const startLine = new Line(
+            new Point(x, y),
+            new Point(v.x, v.y)
+        );
+        startLine.width = startLineWidth;
+        lines = [startLine];
+        endLines = [startLine];
 
-        for(let i = 0; i < branchFrom.length; i++) {
-            let branch = branchFrom[i];
-            for(let j = 0; j < 4; j++) {
-                const v1 = new Vector(branch.a.x, branch.a.y);
-                const v2 = new Vector(branch.b.x, branch.b.y);
-                const v3 = new Vector(branch.b.x, branch.b.y);
-                const angleFrom = v1.angleTo(v2);
-                const angleMod = Math.random() * coneAngle - (coneAngle * 0.5);
+        let branchLength = Infinity;
+        while(branchLength > 34 && endLines.length) {
+            const branchFrom = [...endLines];
+            const newLines = [];
 
-                const v4 = new Vector(0, 0);
-                branchLength = (branch.length * 0.95)
-                v4.length = branchLength;
-                v4.angle = angleFrom + angleMod;
-                v2.addTo(v4);
+            for(let i = 0; i < branchFrom.length; i++) {
+                let branch = branchFrom[i];
+                for(let j = 0; j < 4; j++) {
+                    const v1 = new Vector(branch.a.x, branch.a.y);
+                    const v2 = new Vector(branch.b.x, branch.b.y);
+                    const v3 = new Vector(branch.b.x, branch.b.y);
+                    const angleFrom = v1.angleTo(v2);
+                    const angleMod = Math.random() * coneAngle - (coneAngle * 0.5);
 
-                const v5 = new Vector(0, 0);
-                v5.length = branch.length + 5;
-                v5.angle = angleFrom + angleMod;
-                v3.addTo(v5);
+                    const v4 = new Vector(0, 0);
+                    branchLength = (branch.length * 0.95)
+                    v4.length = branchLength;
+                    v4.angle = angleFrom + angleMod;
+                    v2.addTo(v4);
 
-                const intersectLine = new Line(branch.b, new Point(v3.x, v3.y));
+                    const v5 = new Vector(0, 0);
+                    v5.length = branch.length + 5;
+                    v5.angle = angleFrom + angleMod;
+                    v3.addTo(v5);
 
-                const line = new Line(branch.b, new Point(v2.x, v2.y));
-                line.width = branch.width * 0.91;
+                    const intersectLine = new Line(branch.b, new Point(v3.x, v3.y));
 
-                let isIntersect = false;
-                for(const otherLine of lines) {
-                    if(otherLine === intersectLine) continue;
-                    if(intersectLine.isIntersect(otherLine)) {
-                        isIntersect = true;
-                        break;
+                    const line = new Line(branch.b, new Point(v2.x, v2.y));
+                    line.width = branch.width * 0.91;
+
+                    let isIntersect = false;
+                    for(const otherLine of lines) {
+                        if(otherLine === intersectLine) continue;
+                        if(intersectLine.isIntersect(otherLine)) {
+                            isIntersect = true;
+                        }
                     }
-                }
-                for(const otherLine of newLines) {
-                    if(otherLine === intersectLine) continue;
-                    if(intersectLine.isIntersect(otherLine)) {
-                        isIntersect = true;
-                        break;
+                    for(const otherLine of newLines) {
+                        if(otherLine === intersectLine) continue;
+                        if(intersectLine.isIntersect(otherLine)) {
+                            isIntersect = true;
+                        }
                     }
-                }
-                if(!isIntersect) {
-                    if(isInBounds(line.b, width - 20, height - 20)) {
-                        newLines.push(line);
+                    if(!isIntersect) {
+                        if(isInBounds(line.b, width - 20, height - 20)) {
+                            newLines.push(line);
+                        }
                     }
                 }
             }
+            endLines = [...newLines];
+            lines.push(...newLines);
         }
-        endLines = [...newLines];
-        lines.push(...newLines);
-    }
 
-    context.clearRect(0, 0, width, height);
-    context.strokeStyle = white;
+        context.strokeStyle = white;
+        context.fillStyle = red;
+        for(const line of lines) {
+            drawShape(line, 6);
+        }
 
-    for(const line of lines) {
-        drawShape(line);
-    }
+        context.translate(-3, -2)
+        context.globalAlpha = 1;
+        context.fillStyle = black;
+        for(const line of lines) {
+            drawShape(line, 8);
+        }
 
-    for(const line of lines) {
-        if(line.length < 45) {
-            drawCircle(line.b, ((45 - line.length) / 40) * 8);
+        for(const line of lines) {
+            if(line.length < 45) {
+                context.fillStyle = black;
+                drawCircle(line.b, ((45 - line.length) / 40) * 45);
+                context.fillStyle = white;
+                drawCircle(line.b, ((45 - line.length) / 40) * 25);
+                context.fillStyle = red;
+                drawCircle(line.b, ((45 - line.length) / 40) * 15);
+
+            }
         }
     }
 }

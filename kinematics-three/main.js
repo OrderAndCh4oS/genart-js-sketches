@@ -101,15 +101,6 @@ function startAnimating() {
 }
 
 function update() {
-    // context.globalCompositeOperation = 'multiply';
-
-    // context.fillStyle = colourSet.black;
-    // context.fillRect(-(width / 2), -(height / 2), width, height);
-
-    if(iteration % 50 === 0) {
-        currentColourIndex++;
-    }
-    // context.fillStyle = allColours[currentColourIndex % allColours.length];
     context.strokeStyle = colourSet.black;
     context.lineWidth = strokeWidth;
     context.fillStyle = colourSet.white;
